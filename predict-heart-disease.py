@@ -15,17 +15,10 @@ import sys # to get arguments (parameter) manually
 
 import pandas as pd
 import numpy as np
-import json
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-
-#from sklearn.metrics import mean_squared_error # == [(a - b) ** 2]
-from sklearn.metrics import mean_absolute_error # == [abs(a - b)]
-#from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score, confusion_matrix, classification_report
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score, roc_curve, confusion_matrix, classification_report, ConfusionMatrixDisplay
-
-from sklearn.metrics import r2_score
 
 import pickle # to save/load model to/from file
 
@@ -185,7 +178,7 @@ def visualize_data(df):
     plt.tight_layout()
     plt.show()
 
-def visualize_correclation_matrix(df):
+def visualize_correlation_matrix(df):
     # Correlation Matrix, to display all Features including Target
     corr_matrix = df.corr()
 
