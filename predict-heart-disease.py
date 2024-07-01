@@ -3,7 +3,7 @@ Demo to show Logistic Regression (classification)
 
 Demo v1.0
 Hariyanto Lim
-Last update: 2024-06-13
+Last update: 2024-07-01
 """
 # interactive mode for Jupyter notebbok in browser (not in command line)
 # require: pip install ipympl
@@ -63,7 +63,10 @@ def predict_data(model, X, y):
     print(f'Accuracy: {accuracy:.2f}')
     print(f'Precision: {precision:.2f}')
     print(f'Recall: {recall:.2f}')
-    print(f'ROC-AUC: {roc_auc:.2f}')
+
+    # A perfect classifier will have a ROC AUC equal to 1, whereas a purely random classifier will have a ROC AUC equal to 0.5.
+    print(f'ROC-AUC: {roc_auc:.4f}')
+
     print('Confusion Matrix:')
     print(conf_matrix)
     print('Classification Report:')
@@ -190,16 +193,41 @@ def visualize_correlation_matrix(df):
 def visualize_roc_curve(roc_auc, y, y_predicted):
     # ROC Curve
     fpr, tpr, thresholds = roc_curve(y, y_predicted)
+    #print(f"thresholds: {thresholds}")
+
+    # Find the closest thresholds index 
+    preferred_threshold = 0.4 # any other desired value)
+    closest_threshold_index = np.argmin(np.abs(thresholds - preferred_threshold))
+    selected_threshold = thresholds[closest_threshold_index]
+
+    # Sensitivity (True Positive Rate) == also known as "recall rate", the higher the better
+    # Measures the proportion of positive cases that are correctly identified by your classification model.
+    # focuses on catching true positives.
+    # eg: Sensitivity: If 80% of people with the disease test positive, the sensitivity is 0.8.
+    sensitivity = tpr[closest_threshold_index]
+
+    # Specificity (True Negative Rate), the higher the better
+    # Measures the proportion of negative cases that are correctly identified by your model.
+    # focuses on avoiding false positives.
+    # eg: Specificity: If 95% of people without the disease test negative, the specificity is 0.95.
+    specificity = 1 - fpr[closest_threshold_index]
+
+    print(f"Sensitivity (Recall) at threshold [{selected_threshold:.3f}]: {sensitivity}")
+    print(f"Specificity at threshold [{selected_threshold:.3f}]: {specificity}")
 
     plt.figure()
-    plt.plot(fpr, tpr, color='blue', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+
+    label_text = f"ROC curve (area = {roc_auc:.2f})\nThreshold: {selected_threshold:.2f}\nSensitivity: {sensitivity:.2f}\nSpecificity: {specificity:.2f}"
+    plt.plot(fpr, tpr, color='blue', lw=2, label=label_text)
+    plt.legend(loc="lower right")
+
     plt.plot([0, 1], [0, 1], color='gray', lw=2, linestyle='--')
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
+    plt.xlabel(f"False Positive Rate")
+    plt.ylabel(f"True Positive Rate")
     plt.title('Receiver Operating Characteristic (ROC) Curve')
-    plt.legend(loc="lower right")
+    
     plt.show()
 
 def visualize_confusion_matrix(model, conf_matrix):
