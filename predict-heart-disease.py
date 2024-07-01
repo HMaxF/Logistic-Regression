@@ -244,7 +244,7 @@ if __name__ == "__main__":
 
         #visualizeIn3D(df)
         visualize_data(df)
-        visualize_correclation_matrix(df)
+        visualize_correlation_matrix(df)
         
         # create model
         model = create_model(df)
