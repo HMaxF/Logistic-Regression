@@ -124,7 +124,7 @@ def create_and_train_model(df):
 
     # learning point
     # show the model information but predicting the same data
-    y_pred, y_pred_prob = predict_data(model, X)
+    y_pred, y_pred_prob = predict_data(model, X.values)
     show_result_info(y, y_pred, y_pred_prob)
 
     return model
